@@ -21,13 +21,15 @@ RUN addgroup -S appuser \
     && mkdir /app
 
 # Build React app
-WORKDIR /src
+WORKDIR /app
 
-COPY ./app/* ./
+COPY ./app/* ./app
 
-RUN yarn install \
+RUN cd ./app && yarn install \
     && yarn run build \
-    && cp build/* /app/
+    && cp build/* /app/ \
+    && cd /app \
+    && rm -rf app
 
 # STAGE 2: build the container to run
 FROM scratch AS final
