@@ -3,8 +3,7 @@
 FROM alpine:latest AS build
 RUN apk update \
     && apk upgrade \
-    && apk add --no-cache curl \
-                          nodejs \
+    && apk add --no-cache nodejs \
                           yarn
 
 RUN yarn set version latest
@@ -17,7 +16,7 @@ RUN addgroup -S appuser \
 WORKDIR /src
 
 # Copy the `app/` folder from the git repository into the working directory
-COPY ./app ./
+COPY ./app ./app
 
 # Install and build the React application
 RUN cd ./app \
