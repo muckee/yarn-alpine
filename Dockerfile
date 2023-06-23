@@ -5,36 +5,30 @@ RUN apk update \
     && apk upgrade \
     && apk add --no-cache curl \
                           nodejs \
-                          npm
+                          yarn
 
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v18.16.0/install.sh | bash
-
-# install node and npm
-RUN source /usr/local/nvm/nvm.sh \
-    && nvm install 18.16.0 \
-    && nvm alias default 18.6.0 \
-    && nvm use default
+RUN yarn set version latest
 
 # Add user here. Cannot be added in scratch
 RUN addgroup -S appuser \
     && adduser -S -u 10000 -g appuser appuser \
     && mkdir /app
 
-# Build React app
-WORKDIR /app
+WORKDIR /src
 
-COPY ./app/* ./app
+# Copy the `app/` folder from the git repository into the working directory
+COPY ./app ./
 
-RUN cd ./app && yarn install \
-    && yarn run build \
-    && cp build/* /app/ \
-    && cd /app \
-    && rm -rf app
+# Install and build the React application
+RUN cd ./app \
+    && yarn install \
+    && yarn run build
 
-# STAGE 2: build the container to run
+# STAGE 2: build the scratch image
 FROM scratch AS final
 
-COPY --from=build /app /app
+# Copy the HTML application from the build image
+COPY --from=build /src/app/build /app
  
 USER appuser
  
