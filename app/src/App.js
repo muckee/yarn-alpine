@@ -31,7 +31,7 @@ function App() {
             a properly-configured environment.
           </b>
           </small>
-          <br>
+          <br />
           <small>
           <b>
             The compiled image is designed only to support applications built with `create-react-app`.
@@ -61,7 +61,7 @@ function App() {
           our contact details, or via any of our social media!
         </p>
 
-        <!--    TODO: Add contact details here.    -->
+	{`<!--    TODO: Add contact details here.    -->`}
 
         <p class='copy'>
         <small>
