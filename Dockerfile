@@ -7,7 +7,7 @@ RUN apk update \
 RUN apk add --no-cache nodejs \
                           yarn
 
-RUN yarn set version latest
+RUN yarn set version stable
 
 # Add user here. Cannot be added in scratch
 RUN addgroup -S appuser \
