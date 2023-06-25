@@ -1,5 +1,5 @@
 ###################
-# STEP 1
+# STEP 1: Build the React app
 ###################
 FROM alpine:latest AS build
 
@@ -12,8 +12,9 @@ RUN apk update \
     && apk upgrade
 
 # Install dependencies
-RUN apk add --no-cache nodejs \
-                          yarn
+RUN apk add --no-cache ca-certificates \
+                       nodejs \
+                       yarn
 
 # Update Yarn
 RUN yarn set version stable
@@ -27,11 +28,6 @@ COPY ./package ./
 RUN yarn install --immutable \
     && yarn run build
 
-###################
-# STEP TWO
-###################
-FROM scratch AS final
-
-COPY --from=build /src/build /app
-
-USER appuser
+# Update the contents of the `/app` folder with the generated static content
+RUN rm -rf /app/.* \
+    && mv ./build/.* /app/
