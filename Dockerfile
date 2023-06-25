@@ -21,7 +21,7 @@ RUN yarn set version stable
 WORKDIR /src
 
 # Copy the repository files to the image
-COPY ./app ./
+COPY ./package ./
 
 # Install and build the React application
 RUN yarn install --immutable \
@@ -30,8 +30,8 @@ RUN yarn install --immutable \
 ###################
 # STEP TWO
 ###################
-FROM quay.io/muck/go-scratch:latest AS final
+FROM scratch AS final
 
-COPY --from=build /src/build /
+COPY --from=build /src/build /app
 
 USER appuser
