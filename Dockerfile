@@ -32,8 +32,6 @@ RUN yarn install --immutable \
 ###################
 FROM scratch AS final
 
-RUN mkdir /app
-
 COPY --from=build /src/build /app
 
 USER appuser
