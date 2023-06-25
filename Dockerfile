@@ -29,8 +29,8 @@ FROM scratch AS final
 RUN mkdir /app
 
 # Copy the HTML application from the build image
-COPY --from=build /src/app/build /app/
+COPY --from=build /src/app/build /
  
 USER appuser
  
-ENTRYPOINT ["/app"]
+ENTRYPOINT ["/index.html"]
