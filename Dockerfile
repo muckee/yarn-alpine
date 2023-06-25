@@ -3,10 +3,6 @@
 ###################
 FROM alpine:latest AS build
 
-# Add user
-RUN addgroup -S appuser \
-    && adduser -S -u 10000 -g appuser appuser
-
 # Update repositories and packages
 RUN apk update \
     && apk upgrade
@@ -15,8 +11,6 @@ RUN apk update \
 RUN apk add --no-cache nodejs \
                        yarn
 
-WORKDIR /src
-
 # Copy the repository files to the image
 COPY ./package ./
 
@@ -24,4 +18,4 @@ COPY ./package ./
 RUN yarn set version stable \
     && yarn install --immutable \
     && yarn run build \
-    && cp -r build /usr/local/
+    && cp -r build /usr/share/react-ui
