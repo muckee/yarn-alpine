@@ -32,7 +32,6 @@ RUN yarn install --immutable \
 ###################
 FROM quay.io/muck/go-scratch:latest AS final
 
-COPY --from=build /src/build /app
+COPY --from=build /src/build /
  
-ENTRYPOINT ["/app"]
-
+ENTRYPOINT ["/index.js"]
