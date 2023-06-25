@@ -30,4 +30,4 @@ RUN yarn install --immutable \
 
 # Update the contents of the `/app` folder with the generated static content
 RUN rm -rf /app/.* \
-    && mv ./build/.* /app/
+    && mv ./package/build/.* /app/
