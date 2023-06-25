@@ -24,5 +24,4 @@ COPY ./package ./
 # Update Yarn
 RUN yarn set version stable \
     && yarn install --immutable \
-    && yarn run build \
-    && mv build/.* /app/
+    && yarn run build
