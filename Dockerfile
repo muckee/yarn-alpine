@@ -31,4 +31,4 @@ COPY --from=build /src/app/build /app
  
 USER appuser
  
-ENTRYPOINT ["/index.html"]
+ENTRYPOINT ["/app"]
