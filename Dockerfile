@@ -35,5 +35,3 @@ FROM quay.io/muck/go-scratch:latest AS final
 COPY --from=build /src/build /
 
 USER appuser
- 
-ENTRYPOINT ["/index.html"]
