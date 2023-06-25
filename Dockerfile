@@ -1,18 +1,24 @@
- 
-# STAGE 1: build the react application
+###################
+# STEP 1
+###################
 FROM alpine:latest AS build
-RUN apk update \
-    && apk upgrade
 
-RUN apk add --no-cache nodejs \
-                          yarn
-
-RUN yarn set version stable
-
-# Add user here. Cannot be added in scratch
+# Add user
 RUN addgroup -S appuser \
     && adduser -S -u 10000 -g appuser appuser
 
+# Update repositories and packages
+RUN apk update \
+    && apk upgrade
+
+# Install dependencies
+RUN apk add --no-cache nodejs \
+                          yarn
+
+# Update Yarn
+RUN yarn set version stable
+
+# Set the working directory for the image
 WORKDIR /src
 
 # Copy the `app/` folder from the git repository into the working directory
@@ -23,12 +29,15 @@ RUN cd ./app \
     && yarn install --immutable \
     && yarn run build
 
-# STAGE 2: build the scratch image
+###################
+# STEP TWO
+###################
 FROM scratch AS final
 
 # Copy the HTML application from the build image
 COPY --from=build /src/app/build /app
  
+# Assign the filesystem user
 USER appuser
  
-ENTRYPOINT ["/app"]
+ENTRYPOINT ["/app/index.html"]
