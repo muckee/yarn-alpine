@@ -2,16 +2,16 @@
 # STAGE 1: build the react application
 FROM alpine:latest AS build
 RUN apk update \
-    && apk upgrade \
-    && apk add --no-cache nodejs \
+    && apk upgrade
+
+RUN apk add --no-cache nodejs \
                           yarn
 
 RUN yarn set version latest
 
 # Add user here. Cannot be added in scratch
 RUN addgroup -S appuser \
-    && adduser -S -u 10000 -g appuser appuser \
-    && mkdir /app
+    && adduser -S -u 10000 -g appuser appuser
 
 WORKDIR /src
 
@@ -20,7 +20,7 @@ COPY ./app ./app
 
 # Install and build the React application
 RUN cd ./app \
-    && yarn install \
+    && yarn install --immutable \
     && yarn run build
 
 # STAGE 2: build the scratch image
