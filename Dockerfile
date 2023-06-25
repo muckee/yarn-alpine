@@ -27,7 +27,7 @@ RUN cd ./app \
 FROM scratch AS final
 
 # Copy the HTML application from the build image
-COPY --from=build /src/app/build /
+COPY --from=build /src/app/build /app
  
 USER appuser
  
