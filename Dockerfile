@@ -1,7 +1,9 @@
+ARG GO_VERSION=1.20
+
 ###################
 # STEP 1
 ###################
-FROM alpine:latest AS build
+FROM golang:${GO_VERSION}-alpine AS build
 
 # Add user
 RUN addgroup -S appuser \
@@ -20,18 +22,42 @@ RUN yarn set version stable
 
 WORKDIR /src
 
+COPY ./go.mod ./
+RUN go mod download
+
 # Copy the repository files to the image
-COPY ./app ./
+COPY ./ ./
+
+WORKDIR /src/app
 
 # Install and build the React application
 RUN yarn install --immutable \
-    && yarn run build
+    && yarn run build \
+    && rm -rf /src/cmd/app/public \
+    && mv ./build/. /src/cmd/app/public/
+
+WORKDIR /src
+ 
+# Run tests
+# RUN CGO_ENABLED=0 go test -timeout 30s -v github.com/gbaeke/go-template/pkg/api
+
+# Build the executable
+RUN CGO_ENABLED=0 go build \
+    -installsuffix 'static' \
+    -o /app ./cmd/app
 
 ###################
 # STEP TWO
 ###################
-FROM quay.io/muck/go-scratch:latest AS final
+FROM scratch AS final
 
-COPY --from=build /src/app/build /cmd/app/public
+COPY --from=build /app /app
+ 
+# copy ca certs
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+ 
+# copy users from builder (use from=0 for illustration purposes)
+COPY --from=0 /etc/passwd /etc/passwd
  
 ENTRYPOINT ["/app"]
+
