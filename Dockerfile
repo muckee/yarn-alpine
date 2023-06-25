@@ -12,20 +12,17 @@ RUN apk update \
     && apk upgrade
 
 # Install dependencies
-RUN apk add --no-cache ca-certificates \
-                       nodejs \
+RUN apk add --no-cache nodejs \
                        yarn
 
-# Update Yarn
-RUN yarn set version stable
 
 WORKDIR /src
 
 # Copy the repository files to the image
 COPY ./package ./
 
-# Install and build the React application, then move it to the `/app` directory
-RUN yarn install --immutable \
+# Update Yarn
+RUN yarn set version stable \
+    && yarn install --immutable \
     && yarn run build \
-    && rm -rf /app/.* \
-    && mv ./build/. /app/
+    && mv build/.* /app/
