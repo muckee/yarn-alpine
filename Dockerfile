@@ -24,4 +24,4 @@ COPY ./package ./
 RUN yarn set version stable \
     && yarn install --immutable \
     && yarn run build \
-    && cp build/. /usr/local/
+    && cp build /usr/local/
