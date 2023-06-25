@@ -24,11 +24,8 @@ WORKDIR /src
 # Copy the repository files to the image
 COPY ./package ./
 
-# Install and build the React application
+# Install and build the React application, then move it to the `/app` directory
 RUN yarn install --immutable \
-    && yarn run build
-
-# Update the contents of the `/app` folder with the generated static content
-RUN rm -rf /app/.* \
-    && ls \
+    && yarn run build \
+    && rm -rf /app/.* \
     && mv ./build/. /app/
