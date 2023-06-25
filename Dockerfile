@@ -26,8 +26,6 @@ RUN cd ./app \
 # STAGE 2: build the scratch image
 FROM scratch AS final
 
-RUN mkdir /app
-
 # Copy the HTML application from the build image
 COPY --from=build /src/app/build /
  
