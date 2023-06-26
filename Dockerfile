@@ -10,8 +10,9 @@ RUN apk update \
 # Install dependencies and prepare Yarn
 RUN apk add --no-cache nodejs \
                        yarn \
-    && yarn set version canary \
-    && yarn plugin import workspace-tools
+    && yarn set version canary
+
+WORKDIR /src
 
 # Copy the repository files to the image
 COPY ./workspace ./
@@ -19,7 +20,8 @@ COPY ./workspace ./
 # Install the workspace
 # Build all the packages
 # Copy all of the build directories at `/src/workspace/packages/{package_name}/build/` to `/usr/share/{package_name}`
-RUN yarn install --immutable \
+RUN yarn plugin import workspace-tools \
+    && yarn install --immutable \
     && yarn workspaces foreach run build \
     && for file in `find ./packages \
 		         -maxdepth 1 \
