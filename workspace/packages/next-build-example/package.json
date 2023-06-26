@@ -1,11 +1,11 @@
 {
-  "name": "react-scratch-guide",
+  "name": "next-build-example",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "PORT=3999 next start",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
