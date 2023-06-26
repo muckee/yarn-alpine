@@ -20,8 +20,7 @@ COPY ./workspace ./
 # Install the workspace
 # Build all the packages
 # Copy all of the build directories at `/src/workspace/packages/{package_name}/build/` to `/usr/share/{package_name}`
-RUN yarn plugin import workspace-tools \
-    && yarn install --immutable \
+RUN yarn install --immutable \
     && yarn workspaces foreach run build \
     && for file in `find ./packages \
 		         -maxdepth 1 \
