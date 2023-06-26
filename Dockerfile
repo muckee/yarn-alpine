@@ -10,7 +10,7 @@ RUN apk update \
 # Install dependencies and prepare Yarn
 RUN apk add --no-cache nodejs \
                        yarn \
-    && yarn set version canary
+    && yarn set version canary \
     && yarn plugin import workspace-tools
 
 # Copy the repository files to the image
