@@ -9,19 +9,16 @@ RUN apk update \
 
 # Install dependencies
 RUN apk add --no-cache nodejs \
-                       yarn
+                       corepack \
+    && corepack prepare yarn@stable --activate
 
 # Copy the repository files to the image
 COPY ./workspace ./
-# COPY ./package ./
 
-
-# Line 1: Update Yarn to latest table version
-# Line 2: Add support for `yarn workspaces foreach ...` by installing the `workspace-tools` plugin
-# Line 3: Install the workspace
-# Line 4: Build all the packages
-# Line 5: Copy all of the build directories at `/src/workspace/packages/{package_name}/build/` to `/usr/share/{package_name}`
-RUN yarn set version stable
+# Line 1: Add support for `yarn workspaces foreach ...` by installing the `workspace-tools` plugin
+# Line 2: Install the workspace
+# Line 3: Build all the packages
+# Line 4: Copy all of the build directories at `/src/workspace/packages/{package_name}/build/` to `/usr/share/{package_name}`
 RUN yarn plugin import workspace-tools \
     && yarn install --immutable \
     && yarn workspaces foreach run build \
