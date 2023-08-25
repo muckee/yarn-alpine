@@ -8,7 +8,8 @@ RUN apk update \
     && apk upgrade
 
 # Install dependencies and prepare Yarn
-RUN apk add --no-cache nodejs \
+RUN apk add --no-cache git \
+                       nodejs \
                        yarn \
     && yarn set version canary
 
