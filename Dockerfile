@@ -12,4 +12,8 @@ RUN apk add --no-cache nodejs \
                        yarn \
     && yarn set version canary
 
-WORKDIR /src
+RUN mkdir -p /workspace \
+    && cd /workspace \
+    && yarn init -w
+
+WORKDIR /workspace
