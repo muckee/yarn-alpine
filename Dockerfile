@@ -4,17 +4,25 @@
 FROM alpine:latest AS build
 
 # Update repositories and packages
-RUN apk update \
-    && apk upgrade
+RUN addgroup -g 1000 node \
+    && adduser -u 1000 -G node -s /bin/sh -D node \
+    && apk update && apk upgrade
 
 # Install dependencies and prepare Yarn
 RUN apk add --no-cache git \
                        nodejs \
                        yarn \
-    && yarn set version canary
+                       npx \
+    && yarn set version canary \
+    && rm -f /package.json
 
 RUN mkdir -p /workspace \
     && cd /workspace \
-    && yarn init -w
+    && yarn init -w \
+    && chown -R node:node /workspace
+
+ENV HOME=/home/node
+
+USER node
 
 WORKDIR /workspace
