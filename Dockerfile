@@ -15,7 +15,7 @@ RUN apk add --no-cache git \
     && yarn set version canary
 
 RUN mkdir -p /home/node/packages \
-    && cd /home/workspace \
+    && cd /home/node \
     && yarn init -w \
     && yarn install \
     && chown -R node:node /home/node
