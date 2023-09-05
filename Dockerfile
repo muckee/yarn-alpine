@@ -17,7 +17,7 @@ RUN apk add --no-cache git \
 RUN mkdir -p /home/node/packages \
     && cd /home/node \
     && yarn init -w \
-    && yarn install browserslist \
+    && yarn add browserslist \
     && chown -R node:node /home/node
 
 ENV HOME=/home/node
