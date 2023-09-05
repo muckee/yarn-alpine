@@ -12,15 +12,14 @@ RUN addgroup -g 1000 node \
 RUN apk add --no-cache git \
                        nodejs \
                        yarn \
-                       npm \
     && yarn set version canary \
-    && npm i -g npx \
     && rm -f /package.json
 
-RUN mkdir -p /workspace \
-    && cd /workspace \
+RUN mkdir -p /home/node/packages \
+    && cd /home/workspace \
     && yarn init -w \
-    && chown -R node:node /workspace
+    && yarn install \
+    && chown -R node:node /home/node
 
 ENV HOME=/home/node
 
