@@ -24,4 +24,4 @@ ENV HOME=/home/node
 
 USER node
 
-WORKDIR /workspace
+WORKDIR /home/node
