@@ -26,8 +26,8 @@ RUN mkdir -p packages \
 # Grant ownership of the `/home/node` directory to user 'node'
 RUN chown -R node:node /home/node
 
-# Default to user 'node'
-USER node
-
 # Assign the path `/home/node` to the environment variable `HOME`
 ENV HOME=/home/node
+
+# Default to user 'node'
+USER node
