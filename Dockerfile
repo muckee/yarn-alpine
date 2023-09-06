@@ -3,10 +3,12 @@
 ###################
 FROM alpine:latest AS build
 
-# Update repositories and packages
+# Create a user with the name 'node'
 RUN addgroup -g 1000 node \
-    && adduser -u 1000 -G node -s /bin/sh -D node \
-    && apk update && apk upgrade
+    && adduser -u 1000 -G node -s /bin/sh -D node
+
+# Update APK libraries and packages
+RUN apk update && apk upgrade
 
 # Install dependencies and prepare Yarn
 RUN apk add --no-cache git \
@@ -14,13 +16,18 @@ RUN apk add --no-cache git \
                        yarn \
     && yarn set version canary
 
-RUN mkdir -p /home/node/packages \
-    && cd /home/node \
-    && yarn init -w \
-    && chown -R node:node /home/node
+# Grant ownership of the `/home/node` directory to user 'node'
+RUN chown -R node:node /home/node
 
-ENV HOME=/home/node
-
+# Default to user 'node'
 USER node
 
+# Set the `/home/node` directory as the current working directory
 WORKDIR /home/node
+
+# Assign the path `/home/node` to the environment variable `HOME`
+ENV HOME=/home/node
+
+# Initialise the yarn workspace
+RUN mkdir -p packages \
+    && yarn init -w
