@@ -10,18 +10,20 @@ RUN addgroup -g 1000 node \
 # Update APK libraries and packages
 RUN apk update && apk upgrade
 
-# Install dependencies and prepare Yarn
+# Prepare the environment
 RUN apk add --no-cache git \
                        nodejs \
-                       yarn \
-    && yarn set version canary
+                       yarn
+
+# Update Yarn
+RUN yarn set version canary
 
 # Set the `/home/node` directory as the current working directory
 WORKDIR /home/node
 
-# Initialise the yarn workspace
-RUN mkdir -p packages \
-    && yarn init -w
+# # Initialise the yarn workspace
+# RUN mkdir -p packages \
+#     && yarn init -w
 
 # Grant ownership of the `/home/node` directory to user 'node'
 RUN chown -R node:node /home/node
