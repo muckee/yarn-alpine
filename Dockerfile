@@ -16,6 +16,10 @@ RUN apk add --no-cache git \
                        yarn \
     && yarn set version canary
 
+# Initialise the yarn workspace
+RUN mkdir -p packages \
+    && yarn init -w
+
 # Grant ownership of the `/home/node` directory to user 'node'
 RUN chown -R node:node /home/node
 
@@ -27,7 +31,3 @@ WORKDIR /home/node
 
 # Assign the path `/home/node` to the environment variable `HOME`
 ENV HOME=/home/node
-
-# Initialise the yarn workspace
-RUN mkdir -p packages \
-    && yarn init -w
