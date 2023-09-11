@@ -25,7 +25,8 @@ RUN rm /package.json
 WORKDIR /home/yarn
 
 # Grant ownership of the `/home/yarn` directory to user 'yarn'
-RUN chown -R yarn:yarn /home/yarn
+RUN chown -R yarn:yarn /home/yarn && \
+    chmod -R 770 /home/yarn
 
 # Assign the path `/home/yarn` to the environment variable `HOME`
 ENV HOME=/home/yarn
