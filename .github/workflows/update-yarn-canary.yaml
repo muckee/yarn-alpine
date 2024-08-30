@@ -1,0 +1,54 @@
+name: Update Yarn Canary Version
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-yarn:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 'lts/*'
+
+    - name: Install latest Yarn Canary
+      run: |
+        corepack enable
+        yarn set version canary
+        yarn --version > yarn-canary.txt
+
+    - name: Check if Yarn version has changed
+      id: yarn_version_check
+      run: |
+        if [ -f yarn-canary-version.txt ]; then
+          old_version=$(cat yarn-canary-version.txt)
+          new_version=$(cat yarn-canary.txt)
+          if [ "$old_version" != "$new_version" ]; then
+            echo "Yarn version has changed."
+            echo "new_version=$new_version" >> $GITHUB_ENV
+          else
+            echo "Yarn version is the same. No need to commit."
+            echo "no_update=true" >> $GITHUB_ENV
+          fi
+        else
+          echo "New Yarn version detected."
+          echo "new_version=$(cat yarn-canary.txt)" >> $GITHUB_ENV
+        fi
+
+    - name: Commit and Push if Yarn version has changed
+      if: env.no_update != 'true'
+      run: |
+        echo "Committing new Yarn version."
+        echo "$new_version" > yarn-canary-version.txt
+        git config user.name "Muckee"
+        git config user.email "muckee@thugnerdz.com"
+        git add yarn-canary-version.txt
+        git commit -m "Update Yarn to canary version $new_version"
+        git push origin main
