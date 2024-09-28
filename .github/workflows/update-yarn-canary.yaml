@@ -28,15 +28,15 @@ jobs:
       id: cache_yarn_version
       uses: actions/cache@v3
       with:
-        path: yarn-canary.txt
+        path: yarn-canary-version.txt  # Cache the previous version file
         key: yarn-version-cache
 
     - name: Check if Yarn version has changed
       id: yarn_version_check
       run: |
         new_version=$(cat yarn-canary.txt)
-        if [ -f yarn-canary.txt ]; then
-          old_version=$(cat yarn-canary.txt)
+        if [ -f yarn-canary-version.txt ]; then
+          old_version=$(cat yarn-canary-version.txt)
           if [ "$old_version" != "$new_version" ]; then
             echo "Yarn version has changed."
             echo "new_version=$new_version" >> $GITHUB_ENV
@@ -46,16 +46,16 @@ jobs:
           fi
         else
           echo "New Yarn version detected."
-          echo "new_version=$(cat yarn-canary.txt)" >> $GITHUB_ENV
-        fi
+          echo "new_version=$new_version" >> $GITHUB_ENV
 
     - name: Commit and Push if Yarn version has changed
       if: env.no_update != 'true'
       run: |
         echo "Committing new Yarn version."
+        echo "$new_version" > yarn-canary-version.txt  # Save new version to cacheable file
         git config user.name "Muckee"
         git config user.email "muckee@thugnerdz.com"
-        git add yarn-canary.txt
+        git add yarn-canary-version.txt
         git commit -m "Update Yarn to canary version $new_version"
         git push origin main
       env:
